@@ -77,7 +77,7 @@ void dmpDataReady() {
 }
 
 // ================================================================
-// ===               Void Setup                ===
+// ===               VOID UPSETTING                             ===
 // ================================================================
 void Telemetry();
 void TVC_test();
@@ -85,20 +85,18 @@ void PID_Initialisieren();
 void Attach_Servo();
 void TVC_steering();
 void Parachute_deploying();
-
+void Parachute_Servo_Test();
 // ================================================================
 // ===                      INITIAL SETUP                       ===
 // ================================================================
 
 void setup() {
     Serial.begin(115200);
+    
     Telemetry();
-    Serial.println(F("Attaching Servos..."));
-    Serial.println(F("Testing the parachute servo..."));
     Attach_Servo();
-    Serial.println(F("Testing the TVC-Mount..."));
+    Parachute_Servo_Test();
     TVC_test();
-    Serial.println(F("PID initialising..."));
     PID_Initialisieren();
 
 
@@ -169,6 +167,8 @@ void setup() {
 
     // configure LED for output
     pinMode(LED_PIN, OUTPUT);
+
+  Serial.println("SYSTEM: READY FOR TAKE OFF");  
 }
 
 
@@ -242,6 +242,7 @@ void loop() {
 }
 
 void TVC_test(){
+  Serial.println(F("Testing the TVC-Mount..."));
   y_Servo.write(y_Nullstellung);
   x_Servo.write(x_Nullstellung);
   delay(100);
@@ -260,9 +261,11 @@ void TVC_test(){
   x_Servo.write(x_Nullstellung);
   y_Servo.write(y_Nullstellung);
   delay(500);
+  Serial.println(F("SYSTEM CHECK: OK"));
 }
 
 void PID_Initialisieren(){
+    Serial.println(F("PID initialising..."));
     xInput = ypr[2] * 180/M_PI;
     yInput = ypr[1] * 180/M_PI;
     xSetpoint = 0;
@@ -273,19 +276,28 @@ void PID_Initialisieren(){
     yPID.SetOutputLimits(y_Untergrenze-y_Nullstellung, y_Obergrenze-y_Nullstellung);
     xPID.SetSampleTime(20);
     yPID.SetSampleTime(20);
+    Serial.println(F("SYSTEM CHECK: OK"));
 }
 
 void Attach_Servo(){
+  Serial.println(F("Attaching Servos..."));
   x_Servo.attach(4);
   y_Servo.attach(5);
   Parachute_Servo.attach(3);
+  Serial.println(F("SYSTEM CHECK: OK"));
+}
+
+void Parachute_Servo_Test(){
+  Serial.println(F("Testing the parachute servo..."));
  /* Parachute_Servo.write(Parachute_Nullstellung);
   delay(500);
   Parachute_Servo.write(Parachute_Ausgefahren);
   delay(500);
   Parachute_Servo.write(Parachute_Nullstellung);
   delay(500);
-  Parachute_Servo.detach();*/
+  Parachute_Servo.detach();
+  Serial.println(F("SYSTEM CHECK: OK"));
+*/
 }
 
 void TVC_steering(){
@@ -342,4 +354,10 @@ void Telemetry(){
   Serial.println("Max. Speed in m/s");
   Serial.println(maxspeed);
   delay(1000);
+
+  if(height > 15){
+      Serial.println(F("SYSTEM CHECK: OK"));
+  }else{
+      Serial.println(F("SYSTEM CHECK: PROBLEM: HEIGHT BELOW 15M"));
+  }
 }
