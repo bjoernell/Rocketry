@@ -20,8 +20,8 @@ double ySetpoint, yInput, yOutput;
 
 
 //Specify the links and initial tuning parameters
-double xKp=0.6, xKi=0.1, xKd=0.1;
-double yKp=0.6, yKi=0.1, yKd=0.1;
+double xKp=0.7, xKi=0.05, xKd=0.1;
+double yKp=0.7, yKi=0.05, yKd=0.1;
 
 double i = 0;
 PID xPID(&xInput, &xOutput, &xSetpoint, xKp, xKi, xKd, DIRECT);
